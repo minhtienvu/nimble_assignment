@@ -35,6 +35,8 @@ config/secrets.yml
 
 /config/credentials
 
+config/credentials.yml.enc
+
 coverage
 
 .rspec
