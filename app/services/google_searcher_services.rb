@@ -39,10 +39,7 @@ module GoogleSearcherServices
   end
 
   def generate_response(keyword, google_search_page_html, searchInformation)
-    total_results = searchInformation['formattedTotalResults']
-    total_search_time = searchInformation['formattedSearchTime']
-    total_search_results = searchInformation ? "About #{total_results} results (#{total_search_time} seconds)" : "Can't count the results"
-
+    total_search_results = searchInformation ? "About #{searchInformation['formattedTotalResults']} results (#{searchInformation['formattedSearchTime']} seconds)" : "Can't count the results"
     {
       keyword: keyword,
       total_ad_words: '',
