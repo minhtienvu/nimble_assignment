@@ -2,7 +2,7 @@ module Constants
   # Use Rails.env.secret_key_base in development and test environments. Use ENV["SECRET_KEY_BASE"] in production
   SECRET_KEY = Rails.application.secret_key_base
 
-  TOKEN_EXPIRATION_DATE = 5.hours.from_now
+  TOKEN_EXPIRATION_DATE = 10.minutes.from_now
 
   GOOGLE_SEARCH_URL = 'https://www.google.com/search'
 
