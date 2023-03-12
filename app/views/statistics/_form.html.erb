@@ -1,0 +1,15 @@
+<div class="container mt-5">
+  <%= form_for @statistic do |f| %>
+    <div class="row">
+      <%= f.label :file, "Import searching file", class: "form-label" %>
+
+      <div class="col">
+        <%= f.file_field :file, class: "form-control", required: true, accept: 'text/csv' %>
+      </div>
+
+      <div class="col">
+        <%= f.submit "Search", class: "btn btn-primary" %>
+      </div>
+    </div>
+  <% end %>
+</div>
