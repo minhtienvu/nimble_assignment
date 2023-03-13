@@ -6,7 +6,7 @@ module Constants
 
   CUSTOMER_SEARCH_API = 'https://www.googleapis.com/customsearch'
 
-  START_READ_FROM = 1 # start read csv file from row 1
+  HEADER_ROW = 0
 
   JSON_WEB_TOKEN = {
     authorization_error: 'Unauthorized',
