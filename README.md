@@ -64,3 +64,7 @@ I attached my Postman collection to this project. You can [download it at this l
        3. In the Postman application, Choose `Authorization -> Type -> Bearer Token`. Insert your token step 2 in the `Token` input. Be sure to use the valid token to call API.
            *  If you have a `Permission denied!!` error which means your token is expired, please use API `/api/v1/login` again to get a new token(I only set 10 minutes in my project to quickly check expired token).
        4. Call your API.
+       
+## Problems 
+- I haven't found a way to calculate `Total number of AdWords advertisers on the page.`
+- Finding the best way to improve performance to crawl Google pages.
