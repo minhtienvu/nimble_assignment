@@ -1,9 +1,12 @@
 
-### System dependencies
-Suppose you clone this project and run it on your locally. Ensure your laptop/computer is familiar with these versions to avoid any problems when running my project.
+### Technical requirements
 - Ruby 3.1.3
 - Rails 7.0.4
 - PostgreSQL
+- Bootstrap 5
+- SASS
+- RSpec(Unit tests)
+- Heroku
 
 ### NOTE
 - Because I use the Programmable Search Engine of Google with `a free account with 100 search queries per day`. If you search more than 100 words, it will raise an error `Quota exceeded for quota metric 'Queries' and limit 'Queries per day'`
