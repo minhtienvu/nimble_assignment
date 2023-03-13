@@ -64,6 +64,12 @@ I attached my Postman collection to this project. You can [download it at this l
        3. In the Postman application, Choose `Authorization -> Type -> Bearer Token`. Insert your token step 2 in the `Token` input. Be sure to use the valid token to call API.
            *  If you have a `Permission denied!!` error which means your token is expired, please use API `/api/v1/login` again to get a new token(I only set 10 minutes in my project to quickly check expired token).
        4. Call your API.
+
+## Testing
+- I use RSpec gem to write unit tests, and the coverage of my assignment is around 90%.
+![Screenshot 2023-03-13 at 10 35 09 AM](https://user-images.githubusercontent.com/40865437/224602426-39e635a5-fa3c-4eec-9707-ba495b318259.png)
+
+
        
 ## Problems 
 - I haven't found a way to calculate `Total number of AdWords advertisers on the page.`
