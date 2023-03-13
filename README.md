@@ -1,5 +1,5 @@
 
-### Technical requirements
+### Technical usage
 - Ruby 3.1.3
 - Rails 7.0.4
 - PostgreSQL
@@ -7,6 +7,7 @@
 - SASS
 - RSpec(Unit tests)
 - Heroku
+- JWT to create a token to call API
 
 ### NOTE
 - Because I use the Programmable Search Engine of Google with `a free account with 100 search queries per day`. If you search more than 100 words, it will raise an error `Quota exceeded for quota metric 'Queries' and limit 'Queries per day'`
@@ -74,6 +75,6 @@ I attached my Postman collection to this project. You can [download it at this l
 
 
        
-## Problems 
-- I haven't found a way to calculate `Total number of AdWords advertisers on the page.`
-- Finding the best way to improve performance to crawl Google pages.
+## Problems & Improving
+- I have not found a way to calculate `Total number of AdWords advertisers on the page` in my project, I am still researching after submitting this project. 
+- Finding the best way to improve performance to crawl html code on Google pages.
