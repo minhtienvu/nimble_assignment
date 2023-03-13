@@ -3,7 +3,7 @@ require 'jwt'
 module JsonWebToken
   extend ActiveSupport::Concern
 
-  def jwt_encode(payload, exp = Constants::TOKEN_EXPIRATION_DATE)
+  def jwt_encode(payload, exp = 10.minutes.from_now)
     payload[:exp] = exp.to_i
     JWT.encode(payload, Constants::SECRET_KEY)
   end
