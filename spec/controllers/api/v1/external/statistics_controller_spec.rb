@@ -14,7 +14,7 @@ RSpec.describe Api::V1::External::StatisticsController, type: :controller do
     let(:payload) do
       {
         user_id: user.id,
-        exp: Constants::TOKEN_EXPIRATION_DATE.to_i
+        exp: 10.minutes.from_now.to_i
       }
     end
     let(:token) { JWT.encode(payload, Constants::SECRET_KEY) }
