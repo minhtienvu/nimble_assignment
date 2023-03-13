@@ -1,9 +1,13 @@
 
-### System dependencies
-Suppose you clone this project and run it on your locally. Ensure your laptop/computer is familiar with these versions to avoid any problems when running my project.
+### Technical usage
 - Ruby 3.1.3
 - Rails 7.0.4
 - PostgreSQL
+- Bootstrap 5
+- SASS
+- RSpec(Unit tests)
+- Heroku
+- JWT to create a token to call API
 
 ### NOTE
 - Because I use the Programmable Search Engine of Google with `a free account with 100 search queries per day`. If you search more than 100 words, it will raise an error `Quota exceeded for quota metric 'Queries' and limit 'Queries per day'`
@@ -64,3 +68,13 @@ I attached my Postman collection to this project. You can [download it at this l
        3. In the Postman application, Choose `Authorization -> Type -> Bearer Token`. Insert your token step 2 in the `Token` input. Be sure to use the valid token to call API.
            *  If you have a `Permission denied!!` error which means your token is expired, please use API `/api/v1/login` again to get a new token(I only set 10 minutes in my project to quickly check expired token).
        4. Call your API.
+
+## Testing
+- I use RSpec gem to write unit tests, and the coverage of my assignment is around 90%.
+![Screenshot 2023-03-13 at 10 35 09 AM](https://user-images.githubusercontent.com/40865437/224602426-39e635a5-fa3c-4eec-9707-ba495b318259.png)
+
+
+       
+## Problems & Improving
+- I have not found a way to calculate `Total number of AdWords advertisers on the page` in my project, I am still researching after submitting this project. 
+- Finding the best way to improve performance to crawl html code on Google pages.
