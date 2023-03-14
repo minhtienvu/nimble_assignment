@@ -8,6 +8,7 @@ class Api::V1::External::StatisticsController < Api::V1::External::ApplicationCo
                                .order_by_id_desc
     @count = @statistics.count
     @statistics = @statistics.decorate
+
     render :list
   end
 
