@@ -5,7 +5,6 @@ class StatisticsController < ApplicationController
 
   def index
     @statistics = @statistics.search_like_keywords(params[:search_keyword]) if params[:search_keyword]
-
     @pagy, @statistics = pagy(@statistics.order_by_id_desc)
   end
 
@@ -16,6 +15,7 @@ class StatisticsController < ApplicationController
   def create
     @statistics = search_words_from_file(params[:statistic][:file])
     @pagy, @statistics = pagy(@statistics.order_by_id_desc)
+
     return redirect_to statistics_path, notice: Constants::GOOGLE_API_NOTICE[:import_success]
   rescue StandardError => e
     return redirect_to new_statistic_path, alert: e.message

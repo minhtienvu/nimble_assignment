@@ -38,14 +38,14 @@ module GoogleSearcherServices
     raise StandardError, Constants::GOOGLE_API_NOTICE[:file_data_size_invalid]
   end
 
-  def generate_response(keyword, google_search_page_html, searchInformation)
+  def generate_response(keyword, google_page_html, searchInformation)
     total_search_results = searchInformation ? "About #{searchInformation['formattedTotalResults']} results (#{searchInformation['formattedSearchTime']} seconds)" : "Can't count the results"
     {
       keyword: keyword,
-      total_ad_words: '',
-      total_links: google_search_page_html.search('a').length,
+      total_ad_words: google_page_html.search('span.U3A9Ac').count,
+      total_links: google_page_html.search('a').length,
       total_search_results: total_search_results,
-      html_code: google_search_page_html.to_s
+      html_code: google_page_html.to_s
     }
   end
 end
