@@ -76,6 +76,5 @@ I attached my Postman collection to this project. You can [download it at this l
 
 
        
-## Problems & Improving
-- I have not found a way to calculate `Total number of AdWords advertisers on the page` in my project, I am still researching after submitting this project. 
+## Improving
 - Finding the best way to improve performance to crawl html code on Google pages.
