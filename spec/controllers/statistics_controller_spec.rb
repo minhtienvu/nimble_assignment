@@ -107,7 +107,6 @@ RSpec.describe StatisticsController, type: :controller do
       end
 
       it 'return error if file data is not between 1 - 100' do
-        table = CSV.parse(File.read('spec/support/file/search_keywords_over_data.csv'), headers: true)
         post(:create, params: params)
         expect(response).to redirect_to new_statistic_path
         expect(flash[:alert]).to eq(Constants::GOOGLE_API_NOTICE[:file_data_size_invalid])
