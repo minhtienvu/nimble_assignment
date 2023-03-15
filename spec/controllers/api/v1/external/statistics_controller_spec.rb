@@ -85,9 +85,26 @@ RSpec.describe Api::V1::External::StatisticsController, type: :controller do
   describe 'POST #upload' do
     include_examples 'authorization_valid'
 
+    context 'return error if file is not csv format' do
+      let!(:file_type_is_not_csv) do
+        Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec/support/file/search_keywords.txt'))
+      end
+      let!(:params) do
+        {
+          file: file_type_is_not_csv
+        }
+      end
+
+      it 'return error' do
+        post :upload, params: params, format: :json
+        body = JSON.parse(response.body)
+        expect(body['message']).to eq(Constants::GOOGLE_API_NOTICE[:file_type_is_not_csv])
+      end
+    end
+
     context 'return error if creating new statistics unsuccessfully' do
       let!(:file_over_data) do
-        Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec/support/file/search_keywords_over_data.csv'))
+        Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec/support/file/search_keywords_over_data.csv'), 'text/csv')
       end
       let!(:params) do
         {
@@ -110,7 +127,7 @@ RSpec.describe Api::V1::External::StatisticsController, type: :controller do
 
     context 'return success if create new statistics successfully' do
       let!(:file) do
-        Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec/support/file/search_1_keyword.csv'))
+        Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec/support/file/search_1_keyword.csv'), 'text/csv')
       end
       let!(:params) do
         {

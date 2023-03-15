@@ -5,6 +5,8 @@ module GoogleSearcherServices
   def search_words_from_file(file)
     return raise StandardError, Constants::GOOGLE_API_NOTICE[:file_required] unless file.present?
 
+    validate_file_format!(file)
+
     data = Roo::Spreadsheet.open(file.tempfile)
 
     validate_file_data!(data)
@@ -31,6 +33,10 @@ module GoogleSearcherServices
   end
 
   private
+
+  def validate_file_format!(file)
+    raise StandardError, Constants::GOOGLE_API_NOTICE[:file_type_is_not_csv] if file.content_type != Constants::CSV_FORMAT
+  end
 
   def validate_file_data!(data)
     return unless data.last_row == 0 || data.last_row > 100
