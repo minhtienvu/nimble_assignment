@@ -6,7 +6,7 @@ module Constants
 
   CUSTOMER_SEARCH_API = 'https://www.googleapis.com/customsearch'
 
-  HEADER_ROW = 0
+  READ_START_ROW = 1 # start from 1 because the first row is header
 
   JSON_WEB_TOKEN = {
     authorization_error: 'Unauthorized',
