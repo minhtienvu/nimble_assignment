@@ -3,45 +3,52 @@ module GoogleSearcherServices
   include CrawlHelper
 
   def search_words_from_file(file)
-    return raise StandardError, Constants::GOOGLE_API_NOTICE[:file_required] unless file.present?
-
-    validate_file_format!(file)
-
-    data = Roo::Spreadsheet.open(file.tempfile)
-
-    validate_file_data!(data)
+    @file = file
+    validate_file!
 
     ActiveRecord::Base.transaction do
-      statistics = []
-      file_upload = current_user.file_uploads.create(file_name: file.original_filename)
-
-      data.each_with_index do |row, index|
-        next if row.blank? || index < Constants::READ_START_ROW
-
-        keyword = row.first
-        google_search_response = HTTParty.get(google_search_query(keyword))
-
-        return raise StandardError, google_search_response['error']['message'] if google_search_response.code != 200
-
-        google_page_html = crawl_google_page(keyword)
-        statistics << generate_response(keyword, google_page_html, google_search_response['searchInformation'])
-      end
-      file_upload.statistics.insert_all statistics
-
-      file_upload.statistics
+      statistics = create_new_statistics
+      statistics
     end
   end
 
   private
 
-  def validate_file_format!(file)
-    raise StandardError, Constants::GOOGLE_API_NOTICE[:file_type_is_not_csv] if file.content_type != Constants::CSV_FORMAT
+  def validate_file!
+    return raise StandardError, Constants::GOOGLE_API_NOTICE[:file_required] if @file.blank?
+
+    return raise StandardError, Constants::GOOGLE_API_NOTICE[:file_type_is_not_csv] if @file.content_type != Constants::CSV_FORMAT
+
+    @data = Roo::Spreadsheet.open(@file.tempfile)
+    maximum_data_size = Constants::MAXIMUM_DATA_SIZE + Constants::READ_START_ROW
+
+    if (@data.last_row <= Constants::READ_START_ROW) || (@data.last_row > maximum_data_size)
+      raise StandardError, Constants::GOOGLE_API_NOTICE[:file_data_size_invalid]
+    end
   end
 
-  def validate_file_data!(data)
-    return unless data.last_row == 0 || data.last_row > 100
+  def create_new_statistics
+    file_upload = current_user.file_uploads.create(file_name: @file.original_filename)
+    file_upload.statistics.insert_all get_search_results
+    file_upload.statistics
+  end
 
-    raise StandardError, Constants::GOOGLE_API_NOTICE[:file_data_size_invalid]
+  def get_search_results
+    statistics = []
+
+    @data.each_with_index do |row, index|
+      next if row.blank? || index < Constants::READ_START_ROW
+
+      keyword = row.first
+      google_search_response = HTTParty.get(google_search_query(keyword))
+
+      return raise StandardError, google_search_response['error']['message'] if google_search_response.code != 200
+
+      google_page_html = crawl_google_page(keyword)
+      statistics << generate_response(keyword, google_page_html, google_search_response['searchInformation'])
+    end
+
+    statistics
   end
 
   def generate_response(keyword, google_page_html, searchInformation)

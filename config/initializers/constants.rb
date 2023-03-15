@@ -10,6 +10,8 @@ module Constants
 
   READ_START_ROW = 1 # start from 1 because the first row is header
 
+  MAXIMUM_DATA_SIZE = 100
+
   JSON_WEB_TOKEN = {
     authorization_error: 'Unauthorized',
     permission_denied: 'Permission denied!!'
