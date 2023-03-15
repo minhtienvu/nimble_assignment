@@ -119,7 +119,7 @@ RSpec.describe Api::V1::External::StatisticsController, type: :controller do
       end
 
       it 'return success response' do
-        VCR.use_cassette "search keywords from file" do
+        VCR.use_cassette "search keywords from file", record: :once do
           post :upload, params: params, format: :json
 
           file_data = Roo::Spreadsheet.open(file.tempfile)
