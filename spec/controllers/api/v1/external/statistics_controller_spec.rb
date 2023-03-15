@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::External::StatisticsController, type: :controller do
+  include GoogleApiHelper
   render_views
 
   shared_examples 'authorization_empty' do
@@ -108,17 +109,8 @@ RSpec.describe Api::V1::External::StatisticsController, type: :controller do
     end
 
     context 'return success if create new statistics successfully' do
-      let!(:user) { create(:user) }
-      let!(:file_upload) { create(:file_upload, user:) }
-      let!(:statistic_1) { create(:statistic, keyword: 'Ruby', file_upload:, created_at: DateTime.current) }
-      let!(:statistic_2) do
-        create(:statistic, keyword: 'Python', file_upload:, created_at: DateTime.current - 1.days)
-      end
-      let!(:statistic_3) do
-        create(:statistic, keyword: 'Javascript', file_upload:, created_at: DateTime.current - 1.days)
-      end
       let!(:file) do
-        Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec/support/file/search_keywords_standard.csv'))
+        Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec/support/file/search_1_keyword.csv'))
       end
       let!(:params) do
         {
@@ -126,17 +118,21 @@ RSpec.describe Api::V1::External::StatisticsController, type: :controller do
         }
       end
 
-      before do
-        allow(ActionDispatch::Http::UploadedFile).to receive(:new).and_return(file)
-        allow_any_instance_of(GoogleSearcherServices).to receive(:search_words_from_file).with(file)
-          .and_return(array_to_active_record_relation([statistic_1, statistic_2, statistic_3], Statistic))
-      end
-
       it 'return success response' do
-        post :upload, params: params, format: :json
-        body = JSON.parse(response.body)
-        expect(body['count']).to eq user.statistics.count
-        expect(body['data']).to eq(user.statistics.order_by_id_desc.as_json)
+        VCR.use_cassette "search keywords from file" do
+          post :upload, params: params, format: :json
+
+          file_data = Roo::Spreadsheet.open(file.tempfile)
+          word_counts = file_data.last_row - Constants::READ_START_ROW
+          file_data.each do |keyword|
+            HTTParty.get(google_search_query(keyword))
+          end
+
+          body = JSON.parse(response.body)
+          expect(body['count']).to eq word_counts
+          expect(body['count']).to eq user.statistics.count
+          expect([body['data'][0]['keyword']]).to eq file_data.sheet(0).row(2)
+        end
       end
     end
   end

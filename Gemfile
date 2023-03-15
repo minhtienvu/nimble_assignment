@@ -63,6 +63,9 @@ gem 'httparty'
 
 gem 'pagy'
 
+gem 'vcr'
+gem 'webmock'
+
 # Use Sass to process CSS
 # gem "sassc-rails"
 

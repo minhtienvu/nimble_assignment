@@ -14,7 +14,7 @@ module GoogleSearcherServices
       file_upload = current_user.file_uploads.create(file_name: file.original_filename)
 
       data.each_with_index do |row, index|
-        next if row.blank? || index == Constants::HEADER_ROW
+        next if row.blank? || index < Constants::READ_START_ROW
 
         keyword = row.first
         google_search_response = HTTParty.get(google_search_query(keyword))
