@@ -13,11 +13,9 @@ class Api::V1::External::StatisticsController < Api::V1::External::ApplicationCo
   end
 
   def upload
-    @statistics = search_words_from_file(params[:file]).order_by_id_desc
-    @count = @statistics.count
-    @statistics = @statistics.decorate
+    search_words_from_file(params[:file])
 
-    render :list
+    render json: { message: 'Your imported file will be processed' }
   rescue StandardError => e
     render_error(e.message)
   end

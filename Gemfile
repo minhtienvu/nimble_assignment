@@ -66,6 +66,9 @@ gem 'pagy'
 gem 'vcr'
 gem 'webmock'
 
+gem "sidekiq"
+gem 'sidekiq-status'
+
 # Use Sass to process CSS
 # gem "sassc-rails"
 
