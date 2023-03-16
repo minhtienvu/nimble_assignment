@@ -63,6 +63,12 @@ gem 'httparty'
 
 gem 'pagy'
 
+gem 'vcr'
+gem 'webmock'
+
+gem "sidekiq"
+gem 'sidekiq-status'
+
 # Use Sass to process CSS
 # gem "sassc-rails"
 
@@ -78,6 +84,8 @@ group :development, :test do
   gem "faker"
   gem "shoulda-matchers"
   gem 'rails-controller-testing'
+  gem 'rspec-sidekiq'
+  gem 'simplecov', require: false
 end
 
 group :development do
@@ -96,5 +104,4 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
   gem "webdrivers"
-  gem 'simplecov', require: false
 end

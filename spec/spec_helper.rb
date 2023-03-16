@@ -17,6 +17,14 @@ SimpleCov.start do
   add_filter ['vendor/', 'spec/']
 end
 
+require 'rubygems'
+require 'test/unit'
+require 'vcr'
+VCR.configure do |config|
+  config.cassette_library_dir = "spec/vcr"
+  config.hook_into :webmock
+end
+
 # See https://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

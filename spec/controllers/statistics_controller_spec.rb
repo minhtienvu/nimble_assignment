@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe StatisticsController, type: :controller do
+  include GoogleApiHelper
   render_views
 
   describe 'validations' do
@@ -68,9 +69,28 @@ RSpec.describe StatisticsController, type: :controller do
   describe 'POST #create' do
     login_user
 
+    context 'return error if file is not csv format' do
+      let!(:file_type_is_not_csv) do
+        Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec/support/file/search_keywords.txt'))
+      end
+      let!(:params) do
+        {
+          statistic: {
+            file: file_type_is_not_csv
+          }
+        }
+      end
+
+      it 'return error' do
+        post :create, params: params
+        expect(response).to redirect_to new_statistic_path
+        expect(flash[:alert]).to eq(Constants::GOOGLE_API_NOTICE[:file_type_is_not_csv])
+      end
+    end
+
     context 'return error if creating new statistics unsuccessfully' do
       let!(:file_over_data) do
-        Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec/support/file/search_keywords_over_data.csv'))
+        Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec/support/file/search_keywords_over_data.csv'), 'text/csv')
       end
       let!(:params) do
         {
@@ -87,24 +107,15 @@ RSpec.describe StatisticsController, type: :controller do
       end
 
       it 'return error if file data is not between 1 - 100' do
-        post(:create, params:)
+        post(:create, params: params)
         expect(response).to redirect_to new_statistic_path
         expect(flash[:alert]).to eq(Constants::GOOGLE_API_NOTICE[:file_data_size_invalid])
       end
     end
 
     context 'return success if create new statistics successfully' do
-      let!(:user) { subject.current_user }
-      let!(:file_upload) { create(:file_upload, user:) }
-      let!(:statistic_1) { create(:statistic, keyword: 'Ruby', file_upload:, created_at: DateTime.current) }
-      let!(:statistic_2) do
-        create(:statistic, keyword: 'Python', file_upload:, created_at: DateTime.current - 1.days)
-      end
-      let!(:statistic_3) do
-        create(:statistic, keyword: 'Javascript', file_upload:, created_at: DateTime.current - 1.days)
-      end
       let!(:file) do
-        Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec/support/file/search_keywords_standard.csv'))
+        Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec/support/file/search_1_keyword.csv'), 'text/csv')
       end
       let!(:params) do
         {
@@ -114,17 +125,11 @@ RSpec.describe StatisticsController, type: :controller do
         }
       end
 
-      before do
-        allow(ActionDispatch::Http::UploadedFile).to receive(:new).and_return(file)
-        allow_any_instance_of(GoogleSearcherServices).to receive(:search_words_from_file).with(file)
-          .and_return(array_to_active_record_relation([statistic_1, statistic_2, statistic_3], Statistic))
-      end
-
       it 'return success response' do
         post :create, params: params
-        expect(response).to redirect_to statistics_path
-        expect(flash[:notice]).to eq(Constants::GOOGLE_API_NOTICE[:import_success])
-        expect(assigns(:statistics).count).to eq(user.statistics.count)
+        expect(GoogleSearchWordsJob.jobs.count).to eq 1
+        expect(response).to redirect_to new_statistic_path
+        expect(flash[:notice]).to eq(Constants::GOOGLE_API_NOTICE[:file_is_processed])
       end
     end
   end
