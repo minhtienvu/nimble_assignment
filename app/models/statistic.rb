@@ -7,6 +7,8 @@ class Statistic < ActiveRecord::Base
   validates :total_search_results, presence: true
   validates :html_code, presence: true
 
+  enum :status, [:success, :failed]
+
   scope :order_by_id_desc, -> { order(id: :desc) }
 
   scope :search_like_keywords, lambda { |keyword|

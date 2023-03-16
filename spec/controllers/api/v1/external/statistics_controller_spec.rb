@@ -136,20 +136,11 @@ RSpec.describe Api::V1::External::StatisticsController, type: :controller do
       end
 
       it 'return success response' do
-        VCR.use_cassette "search keywords from file", record: :once do
-          post :upload, params: params, format: :json
+        post :upload, params: params, format: :json
 
-          file_data = Roo::Spreadsheet.open(file.tempfile)
-          word_counts = file_data.last_row - Constants::READ_START_ROW
-          file_data.each do |keyword|
-            HTTParty.get(google_search_query(keyword))
-          end
-
-          body = JSON.parse(response.body)
-          expect(body['count']).to eq word_counts
-          expect(body['count']).to eq user.statistics.count
-          expect([body['data'][0]['keyword']]).to eq file_data.sheet(0).row(2)
-        end
+        expect(GoogleSearchWordsJob.jobs.count).to eq 1
+        body = JSON.parse(response.body)
+        expect(body['message']).to eq(Constants::GOOGLE_API_NOTICE[:file_is_processed])
       end
     end
   end

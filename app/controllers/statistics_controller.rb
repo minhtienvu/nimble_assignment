@@ -13,10 +13,9 @@ class StatisticsController < ApplicationController
   end
 
   def create
-    @statistics = search_words_from_file(params[:statistic][:file])
-    @pagy, @statistics = pagy(@statistics.order_by_id_desc)
+    search_words_from_file(params[:statistic][:file])
 
-    return redirect_to statistics_path, notice: Constants::GOOGLE_API_NOTICE[:import_success]
+    return redirect_to new_statistic_path, notice: Constants::GOOGLE_API_NOTICE[:file_is_processed]
   rescue StandardError => e
     return redirect_to new_statistic_path, alert: e.message
   end

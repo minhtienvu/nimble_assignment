@@ -21,6 +21,7 @@ module Constants
     file_required: 'File is required',
     file_type_is_not_csv: 'File is not csv',
     file_data_size_invalid: 'The number of rows should be between 1 to 100',
-    import_success: 'Import search keywords successfully'
+    import_success: 'Import search keywords successfully',
+    file_is_processed: 'Your imported file will be processed and displayed in the list.'
   }
 end
