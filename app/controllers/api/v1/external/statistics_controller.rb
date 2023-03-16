@@ -15,7 +15,7 @@ class Api::V1::External::StatisticsController < Api::V1::External::ApplicationCo
   def upload
     search_words_from_file(params[:file])
 
-    render json: { message: 'Your imported file will be processed' }
+    render json: { message: Constants::GOOGLE_API_NOTICE[:file_is_processed] }
   rescue StandardError => e
     render_error(e.message)
   end

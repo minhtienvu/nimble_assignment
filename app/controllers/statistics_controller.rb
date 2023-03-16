@@ -15,7 +15,7 @@ class StatisticsController < ApplicationController
   def create
     search_words_from_file(params[:statistic][:file])
 
-    return redirect_to new_statistic_path, notice: 'Your imported file will be processed'
+    return redirect_to new_statistic_path, notice: Constants::GOOGLE_API_NOTICE[:file_is_processed]
   rescue StandardError => e
     return redirect_to new_statistic_path, alert: e.message
   end

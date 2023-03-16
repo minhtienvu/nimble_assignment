@@ -126,20 +126,10 @@ RSpec.describe StatisticsController, type: :controller do
       end
 
       it 'return success response' do
-        VCR.use_cassette "search keywords from file", record: :once do
-          post :create, params: params
-
-          file_data = Roo::Spreadsheet.open(file.tempfile)
-          word_counts = file_data.last_row - Constants::READ_START_ROW
-          file_data.each do |keyword|
-            HTTParty.get(google_search_query(keyword))
-          end
-
-          expect(response).to redirect_to statistics_path
-          expect(flash[:notice]).to eq(Constants::GOOGLE_API_NOTICE[:import_success])
-          expect(assigns(:statistics).count).to eq(word_counts)
-          expect([assigns(:statistics)[0].keyword]).to eq file_data.sheet(0).row(2)
-        end
+        post :create, params: params
+        expect(GoogleSearchWordsJob.jobs.count).to eq 1
+        expect(response).to redirect_to new_statistic_path
+        expect(flash[:notice]).to eq(Constants::GOOGLE_API_NOTICE[:file_is_processed])
       end
     end
   end
